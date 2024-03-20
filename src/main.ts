@@ -1,5 +1,6 @@
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { PrismaErrorFilter } from "./utilities/filters/prisma-error.filter";
 
 // Ref: https://github.com/prisma/studio/issues/614
 BigInt.prototype.toJSON = function () {
@@ -35,6 +36,7 @@ BigInt.prototype.toJSON = function () {
       },
     }),
   );
+  app.useGlobalFilters(new PrismaErrorFilter());
   app.enableCors({
     origin: process.env.CORS_ORIGINS?.split(",") || true,
     allowedHeaders: process.env.CORS_ALLOWED_HEADERS?.split(",") || "*",
