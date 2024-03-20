@@ -53,8 +53,8 @@ enum SocialAccountProvider {
 }
 
 enum AccountType {
-  manager
-  team
+  owner
+  editor
 
   @@map("account_type")
 }
