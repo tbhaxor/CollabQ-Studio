@@ -1,4 +1,4 @@
-import { BadRequestException, ValidationPipe, VersioningType } from "@nestjs/common";
+import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
 // Ref: https://github.com/prisma/studio/issues/614
@@ -40,9 +40,6 @@ BigInt.prototype.toJSON = function () {
     allowedHeaders: process.env.CORS_ALLOWED_HEADERS?.split(",") || "*",
     exposedHeaders: process.env.CORE_EXPOSED_HEADERS?.split(",") || "*",
   });
-  if (process.env.NODE_ENV !== "test") {
-    app.enableVersioning({ type: VersioningType.HEADER, header: "X-API-Version", defaultVersion: "v1.0" });
-  }
 
   await app.listen(3000);
 })();
