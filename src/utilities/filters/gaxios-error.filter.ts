@@ -13,7 +13,7 @@ export class GaxiosErrorFilter implements ExceptionFilter {
   async catch(exception: unknown, host: ArgumentsHost) {
     if (exception instanceof GaxiosError) {
       this.logger.error(exception);
-      const response = await host.switchToHttp().getResponse<Response>();
+      const response = host.switchToHttp().getResponse<Response>();
       return response.status(500).json({
         statusCode: 500,
         error: "Internal Server Error",
