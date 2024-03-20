@@ -12,26 +12,13 @@ import { RequiredPipe } from "../utilities/pipes/required.pipe";
 export class YoutubeController {
   constructor(private youtubeService: YoutubeService) {}
 
-  @Get()
-  getVideo(@Account() account: Prisma.AccountGetPayload<{}>) {
-    return this.youtubeService.getVideoById(account.id, "QtIhZAcCtSk");
-  }
   @Get("/channels")
   getChannels(@Account() account: Prisma.AccountGetPayload<{}>, @Query("channelId") channelId?: string) {
     if (typeof channelId === "string") {
-      return this.youtubeService.getChannelById(account.id, channelId);
+      return this.youtubeService.getChannelById(account.id, channelId).then((channel) => [channel]);
     }
     return this.youtubeService.getChannels(account.id);
   }
-
-  // @Get("/channels/:channelId/videos")
-  // getChannelVideos(
-  //   @Account() account: Prisma.AccountGetPayload<{}>,
-  //   @Param("channelId") channelId: string,
-  //   @Query("videoId") videoId?: string,
-  // ) {
-  //   return this.youtubeService.getVideos(account.id, channelId);
-  // }
 
   @Get("/playlists")
   getChannelPlaylists(
@@ -48,5 +35,10 @@ export class YoutubeController {
   @Get("/playlists/:playlistId/items")
   getChannelPlaylistItems(@Account() account: Prisma.AccountGetPayload<{}>, @Param("playlistId") playlistId: string) {
     return this.youtubeService.getPlaylistItems(account.id, playlistId);
+  }
+
+  @Get("/videos/:videoId")
+  getVideo(@Account() account: Prisma.AccountGetPayload<{}>, @Param("videoId") videoId: string) {
+    return this.youtubeService.getVideoById(account.id, videoId);
   }
 }
