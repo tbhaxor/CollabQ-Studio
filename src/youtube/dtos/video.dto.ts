@@ -1,5 +1,5 @@
-import { youtube_v3 } from "@googleapis/youtube";
-import { Transform, Type, plainToInstance } from "class-transformer";
+import { youtube_v3 } from '@googleapis/youtube';
+import { Transform, Type, plainToInstance } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -10,7 +10,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
 export class VideoStatusDto implements youtube_v3.Schema$VideoStatus {
   @IsString()

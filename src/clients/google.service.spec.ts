@@ -1,8 +1,8 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { GoogleService } from "./google.service";
-import { PrismaModule } from "../prisma/prisma.module";
+import { Test, TestingModule } from '@nestjs/testing';
+import { GoogleService } from './google.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
-describe("GoogleService", () => {
+describe('GoogleService', () => {
   let service: GoogleService;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe("GoogleService", () => {
     service = module.get<GoogleService>(GoogleService);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 });

@@ -1,5 +1,5 @@
-import { youtube_v3 } from "@googleapis/youtube";
-import { Type, plainToInstance } from "class-transformer";
+import { youtube_v3 } from '@googleapis/youtube';
+import { Type, plainToInstance } from 'class-transformer';
 import {
   IsBoolean,
   IsDateString,
@@ -10,7 +10,7 @@ import {
   IsUrl,
   MaxLength,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
 // https://stackoverflow.com/questions/57153948/adding-validation-for-required-params-in-nestjs-using-class-validator
 // By default class validator will mark the fields as required, use @IsOptional()
@@ -70,7 +70,7 @@ export class ChannelDto {
   @IsObject()
   statistics: ChannelStatisticsDto;
 
-  static transform(channel: youtube_v3.Schema$ChannelListResponse["items"][0]): ChannelDto {
+  static transform(channel: youtube_v3.Schema$ChannelListResponse['items'][0]): ChannelDto {
     return plainToInstance(ChannelDto, {
       id: channel.id,
       title: channel.snippet.title,

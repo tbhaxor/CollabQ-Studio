@@ -1,6 +1,6 @@
-import { youtube_v3 } from "@googleapis/youtube";
-import { plainToInstance } from "class-transformer";
-import { IsDateString, IsOptional, IsString, IsUrl } from "class-validator";
+import { youtube_v3 } from '@googleapis/youtube';
+import { plainToInstance } from 'class-transformer';
+import { IsDateString, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class PlaylistDto {
   @IsString()

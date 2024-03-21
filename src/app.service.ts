@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
   greet(name?: string): string {
-    return `Hello ${name || "World"}!`;
+    return `Hello ${name || 'World'}!`;
   }
 }

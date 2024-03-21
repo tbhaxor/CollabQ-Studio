@@ -1,8 +1,8 @@
-import { Prisma } from "@prisma/client";
-import { IsDate, IsEmail, IsIn, IsNotEmpty, IsString } from "class-validator";
-import { PickType } from "@nestjs/mapped-types";
+import { $Enums, Account } from '@prisma/client';
+import { IsDate, IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
 
-export class AccountDto implements Prisma.AccountGetPayload<{}> {
+export class AccountDto implements Account {
   id: bigint;
 
   @IsEmail()
@@ -10,8 +10,8 @@ export class AccountDto implements Prisma.AccountGetPayload<{}> {
   email: string;
 
   @IsString()
-  @IsIn(["manager", "team"])
-  type: "manager" | "team";
+  @IsIn(Object.values($Enums.AccountType))
+  type: $Enums.AccountType;
 
   @IsNotEmpty()
   name: string;
@@ -23,4 +23,4 @@ export class AccountDto implements Prisma.AccountGetPayload<{}> {
   updatedAt: Date;
 }
 
-export class UpdateAccountDto extends PickType(AccountDto, ["email", "name"] as const) {}
+export class UpdateAccountDto extends PickType(AccountDto, ['email', 'name'] as const) {}

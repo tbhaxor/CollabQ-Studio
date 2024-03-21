@@ -1,9 +1,9 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { YoutubeService } from "./youtube.service";
-import { GoogleService } from "../clients/google.service";
-import { PrismaModule } from "../prisma/prisma.module";
+import { Test, TestingModule } from '@nestjs/testing';
+import { YoutubeService } from './youtube.service';
+import { GoogleService } from '../clients/google.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
-describe("YoutubeService", () => {
+describe('YoutubeService', () => {
   let service: YoutubeService;
 
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe("YoutubeService", () => {
     service = module.get<YoutubeService>(YoutubeService);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 });

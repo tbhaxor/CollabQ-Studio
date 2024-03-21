@@ -1,7 +1,7 @@
-import { youtube_v3 } from "@googleapis/youtube";
-import { Injectable, UnprocessableEntityException } from "@nestjs/common";
-import { OAuth2Client } from "google-auth-library";
-import { PrismaService } from "../prisma/prisma.service";
+import { youtube_v3 } from '@googleapis/youtube';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { OAuth2Client } from 'google-auth-library';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class GoogleService {
