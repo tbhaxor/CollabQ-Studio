@@ -1,20 +1,20 @@
-import { BadRequestException, ConsoleLogger, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { $Enums, Prisma } from "@prisma/client";
-import Axios, { AxiosError } from "axios";
-import { UpdateAccountDto } from "./accounts.dto";
+import { BadRequestException, ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Account, AccountType, SocialAccount } from '@prisma/client';
+import Axios, { AxiosError } from 'axios';
+import { UpdateAccountDto } from './accounts.dto';
 
 @Injectable()
 export class AccountsService {
   private readonly logger = new ConsoleLogger(AccountsService.name, {
     timestamp: true,
-    logLevels: process.env.NODE_ENV === "test" && ["fatal"],
+    logLevels: process.env.NODE_ENV === 'test' && ['fatal'],
   });
 
   constructor(private prismaService: PrismaService) {}
 
   getAccountById(accountId: string | bigint) {
-    if (typeof accountId === "string") {
+    if (typeof accountId === 'string') {
       accountId = BigInt(accountId);
     }
 
@@ -25,17 +25,13 @@ export class AccountsService {
     return this.prismaService.account.findFirst({ where: { socialAccounts: { some: { providerId: profileId } } } });
   }
 
-  createAccount(email: string, displayName: string, type: $Enums.AccountType) {
+  createAccount(email: string, displayName: string, type: AccountType) {
     return this.prismaService.account.create({
       data: { email, name: displayName, type },
     });
   }
 
-  upsertSocialAccount(
-    accountId: Prisma.AccountGetPayload<{}>["id"],
-    provider: Prisma.SocialAccountGetPayload<{}>["provider"],
-    providerId: string,
-  ) {
+  upsertSocialAccount(accountId: Account['id'], provider: SocialAccount['provider'], providerId: string) {
     return this.prismaService.socialAccount.upsert({
       where: { providerId_accountId: { accountId: accountId, providerId } },
       create: { providerId, accountId: accountId, provider },
@@ -43,7 +39,7 @@ export class AccountsService {
     });
   }
 
-  upsertAccessToken(socialAccountId: Prisma.SocialAccountGetPayload<{}>["id"], accessToken: string, refreshToken?: string) {
+  upsertAccessToken(socialAccountId: SocialAccount['id'], accessToken: string, refreshToken?: string) {
     return this.prismaService.accessToken.upsert({
       where: { socialAccountId },
       create: { accessToken, refreshToken, socialAccountId: socialAccountId },
@@ -53,16 +49,16 @@ export class AccountsService {
 
   async revokeAccessToken(accountId: bigint) {
     const token = await this.prismaService.accessToken.findFirst({
-      where: { socialAccount: { accountId, provider: "google" } },
+      where: { socialAccount: { accountId, provider: 'google' } },
     });
 
     if (!token) {
-      throw new BadRequestException("Unable to find access tokens for the account.");
+      throw new BadRequestException('Unable to find access tokens for the account.');
     }
 
     try {
-      await Axios.post("https://oauth2.googleapis.com/revoke", null, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      await Axios.post('https://oauth2.googleapis.com/revoke', null, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         params: { token: token.accessToken },
       });
     } catch (error) {
@@ -86,7 +82,7 @@ export class AccountsService {
         })
         .then((count) => count === 1);
       if (isAnotherExists) {
-        throw new BadRequestException(["new email already exists"]);
+        throw new BadRequestException(['new email already exists']);
       }
     }
     return this.prismaService.account.update({

@@ -1,7 +1,7 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { PrismaService } from "./prisma.service";
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaService } from './prisma.service';
 
-describe("PrismaService", () => {
+describe('PrismaService', () => {
   let service: PrismaService;
 
   beforeAll(async () => {
@@ -12,11 +12,11 @@ describe("PrismaService", () => {
     service = module.get<PrismaService>(PrismaService);
   });
 
-  it("should execte raw query", async () => {
+  it('should execte raw query', async () => {
     await expect(service.$executeRaw`SELECT 1 + 1`).resolves.toBe(1);
   });
 
-  it("should return the response from database without any error", async () => {
+  it('should return the response from database without any error', async () => {
     await expect(service.account.findMany()).resolves.toBeInstanceOf(Object);
   });
 });

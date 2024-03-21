@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { Profile, Strategy } from "passport-google-oauth20";
-import { AuthService } from "../auth.service";
-import { Request } from "express";
-import { $Enums } from "@prisma/client";
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Profile, Strategy } from 'passport-google-oauth20';
+import { AuthService } from '../auth.service';
+import { Request } from 'express';
+import { AccountType } from '@prisma/client';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -17,11 +17,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(request: Request, accessToken: string, refreshToken: string, profile: Profile) {
-    return this.authService.upsertAccountWithTokens(
-      <$Enums.AccountType>request.query.state,
-      accessToken,
-      refreshToken,
-      profile,
-    );
+    return this.authService.upsertAccountWithTokens(<AccountType>request.query.state, accessToken, refreshToken, profile);
   }
 }

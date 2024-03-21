@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Injectable } from '@nestjs/common';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class AwsService {
@@ -25,7 +25,7 @@ export class AwsService {
     const cmd = new PutObjectCommand({
       Bucket: process.env.AWS_BUCKET,
       Key: key,
-      ACL: "private",
+      ACL: 'private',
     });
     return getSignedUrl(this.s3Client, cmd, { expiresIn: 3600 });
   }

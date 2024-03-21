@@ -1,7 +1,7 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
-import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";
-import { Logger } from "../logger.utility";
-import { Response } from "express";
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { Logger } from '../logger.utility';
+import { Response } from 'express';
 
 @Catch(PrismaClientValidationError, PrismaClientKnownRequestError)
 export class PrismaErrorFilter implements ExceptionFilter {
@@ -17,8 +17,8 @@ export class PrismaErrorFilter implements ExceptionFilter {
     if (exception instanceof PrismaClientValidationError) {
       return response.status(500).json({
         statusCode: 500,
-        error: "Internal Server Error",
-        message: "Failed to save the information in the database. Contact developers.",
+        error: 'Internal Server Error',
+        message: 'Failed to save the information in the database. Contact developers.',
       });
     }
   }

@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { YoutubeController } from "./youtube.controller";
-import { YoutubeService } from "./youtube.service";
-import { GoogleService } from "../clients/google.service";
-import { PrismaModule } from "../prisma/prisma.module";
+import { Test, TestingModule } from '@nestjs/testing';
+import { YoutubeController } from './youtube.controller';
+import { YoutubeService } from './youtube.service';
+import { GoogleService } from '../clients/google.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
-describe("YoutubeController", () => {
+describe('YoutubeController', () => {
   let controller: YoutubeController;
 
   beforeEach(async () => {
@@ -17,7 +17,7 @@ describe("YoutubeController", () => {
     controller = module.get<YoutubeController>(YoutubeController);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 });

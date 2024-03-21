@@ -1,4 +1,4 @@
-import { ConsoleLogger } from "@nestjs/common";
+import { ConsoleLogger } from '@nestjs/common';
 
 export class Logger extends ConsoleLogger {
   error(message: any, stackOrContext?: string): void;
@@ -7,7 +7,7 @@ export class Logger extends ConsoleLogger {
   error(message: unknown): void {
     super.error(message);
     if (message instanceof Error) {
-      console.error(message.stack.split("\n").slice(1).join("\n"));
+      console.error(message.stack.split('\n').slice(1).join('\n'));
     }
   }
 
@@ -16,9 +16,9 @@ export class Logger extends ConsoleLogger {
   fatal(message: unknown): void {
     if (message instanceof Error) {
       const errMessage = message.message
-        .split("\n")
+        .split('\n')
         .filter((v) => !!v)
-        .join(". ");
+        .join('. ');
 
       super.fatal(`${message.name}: ${errMessage}`);
     } else {

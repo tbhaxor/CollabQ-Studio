@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { ChannelDto } from "./dtos/channel.dto";
-import { GoogleService } from "../clients/google.service";
-import { PlaylistDto } from "./dtos/playlist.dto";
-import { VideoDto } from "./dtos/video.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ChannelDto } from './dtos/channel.dto';
+import { GoogleService } from '../clients/google.service';
+import { PlaylistDto } from './dtos/playlist.dto';
+import { VideoDto } from './dtos/video.dto';
 
 @Injectable({})
 export class YoutubeService {
-  private readonly channelParts: string[] = ["snippet", "statistics"];
+  private readonly channelParts: string[] = ['snippet', 'statistics'];
 
   constructor(private readonly googleService: GoogleService) {}
 
@@ -38,15 +38,15 @@ export class YoutubeService {
     ]);
 
     return yt.channels
-      .list({ part: ["contentDetails"], id: [channelId] })
+      .list({ part: ['contentDetails'], id: [channelId] })
       .then((response) => Array.isArray(response.data.items) && response.data.items[0])
       .then((playlist) =>
         PlaylistDto.transform({
           id: playlist.id,
           snippet: {
-            title: "Uploads",
+            title: 'Uploads',
             publishedAt: channel.publishedAt,
-            description: "Built-in all videos uploads.",
+            description: 'Built-in all videos uploads.',
             thumbnails: { default: { url: channel.thumbnail } },
           },
         }),
@@ -58,7 +58,7 @@ export class YoutubeService {
 
     const [playlists, uploadPlaylist] = await Promise.all([
       yt.playlists
-        .list({ part: ["snippet"], channelId })
+        .list({ part: ['snippet'], channelId })
         .then((response) => response.data.items)
         .then((playlists) => (Array.isArray(playlists) && playlists) || [])
         .then((playlists) => playlists.map((playlist) => PlaylistDto.transform(playlist))),
@@ -73,7 +73,7 @@ export class YoutubeService {
 
     const [playlists, uploadPlaylist] = await Promise.all([
       yt.playlists
-        .list({ part: ["snippet"], id: [playlistId] })
+        .list({ part: ['snippet'], id: [playlistId] })
         .then((response) => response.data.items)
         .then((playlists) => (Array.isArray(playlists) && playlists) || [])
         .then((playlists) => playlists.map((playlist) => PlaylistDto.transform(playlist))),
@@ -92,18 +92,18 @@ export class YoutubeService {
   getPlaylistItems(accountId: bigint, playlistId: string) {
     return this.googleService
       .getYoutubeClient(accountId)
-      .then((yt) => yt.playlistItems.list({ part: ["snippet"], playlistId }))
+      .then((yt) => yt.playlistItems.list({ part: ['snippet'], playlistId }))
       .then((response) => response.data.items);
   }
 
   getVideoById(accountId: bigint, videoId: string) {
     return this.googleService
       .getYoutubeClient(accountId)
-      .then((yt) => yt.videos.list({ part: ["snippet", "contentDetails", "status", "topicDetails"], id: [videoId] }))
+      .then((yt) => yt.videos.list({ part: ['snippet', 'contentDetails', 'status', 'topicDetails'], id: [videoId] }))
       .then((response) => (Array.isArray(response.data.items) && response.data.items[0]) || null)
       .then((video) => {
         if (!video) {
-          throw new NotFoundException("Invalid video id.");
+          throw new NotFoundException('Invalid video id.');
         }
         return VideoDto.transform(video);
       });
