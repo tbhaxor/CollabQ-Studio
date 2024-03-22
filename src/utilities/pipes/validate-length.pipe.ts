@@ -14,6 +14,22 @@ export class ValidateLengthPipe implements PipeTransform {
     if (typeof options.max != 'number' && typeof options.min != 'number') {
       throw new InternalServerErrorException("Both `min` and `max` can't be left optional at same time.");
     }
+
+    if (typeof options.max === 'number' && !Number.isInteger(options.max)) {
+      throw new InternalServerErrorException('Maximum length must be integeral value.');
+    }
+
+    if (typeof options.min === 'number' && !Number.isInteger(options.min)) {
+      throw new InternalServerErrorException('Minimum length must be integeral value.');
+    }
+
+    if (options.min < 0) {
+      throw new InternalServerErrorException("Minimum value can't be less than 0.");
+    }
+
+    if (options.max < options.min) {
+      throw new InternalServerErrorException("Minimum value can't be greater than maximum value.");
+    }
   }
 
   transform(value: any, metadata: ArgumentMetadata) {
@@ -30,5 +46,9 @@ export class ValidateLengthPipe implements PipeTransform {
     }
 
     return value;
+  }
+
+  get isExact() {
+    return this.options.min == this.options.max;
   }
 }
