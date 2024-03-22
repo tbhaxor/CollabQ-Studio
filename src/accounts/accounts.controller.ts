@@ -22,8 +22,8 @@ export class AccountsController {
 
   @Delete('/me')
   @HttpCode(HttpStatus.ACCEPTED)
-  async deleteAccount(@User() user: Account) {
-    await this.accountsService.revokeAccessToken(user.id);
-    await this.accountsService.deleteAccountById(user.id);
+  async deleteAccount(@User('id') userId: bigint) {
+    await this.accountsService.revokeAccessToken(userId);
+    await this.accountsService.deleteAccountById(userId);
   }
 }
