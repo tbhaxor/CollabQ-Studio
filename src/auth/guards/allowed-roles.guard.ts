@@ -7,6 +7,7 @@ import { AccountType } from '@prisma/client';
 @Injectable()
 export class AllowedRolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
+
   canActivate(context: ExecutionContext) {
     const roles = this.reflector.getAllAndOverride<AccountType[] | undefined>(ROLE, [context.getClass(), context.getHandler()]);
 
