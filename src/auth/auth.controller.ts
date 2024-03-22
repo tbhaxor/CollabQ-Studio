@@ -17,7 +17,7 @@ export class AuthController {
   @UseFilters(Oauth2TokenErrorFilter)
   @UseGuards(GoogleAuthGuard)
   async callback(@User() user: Account) {
-    const accessToken = await this.authService.signJwt(user);
+    const accessToken = await this.authService.signJwt(user.id, user.type);
     return { user, accessToken };
   }
 }
