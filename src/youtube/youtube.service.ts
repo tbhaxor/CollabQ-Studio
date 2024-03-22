@@ -3,12 +3,25 @@ import { ChannelDto } from './dtos/channel.dto';
 import { GoogleService } from '../clients/google.service';
 import { PlaylistDto } from './dtos/playlist.dto';
 import { VideoDto } from './dtos/video.dto';
+import { VideoCategoryDto } from './dtos/video-category.dto';
 
 @Injectable({})
 export class YoutubeService {
   private readonly channelParts: string[] = ['snippet', 'statistics'];
 
   constructor(private readonly googleService: GoogleService) {}
+
+  async getVideoCategories(accountId: bigint, country: string, onlyAssignable: boolean) {
+    let categories = await this.googleService
+      .getYoutubeClient(accountId)
+      .then((yt) => yt.videoCategories.list({ part: ['snippet'], regionCode: country }))
+      .then((response) => response.data.items);
+    if (onlyAssignable) {
+      categories = categories.filter((category) => category.snippet.assignable);
+    }
+
+    return categories.map((category) => VideoCategoryDto.transform(category));
+  }
 
   getChannels(accountId: bigint) {
     return this.googleService
