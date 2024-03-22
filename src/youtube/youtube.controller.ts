@@ -1,5 +1,4 @@
-import { Controller, Get, Param, Query, UseFilters, UseGuards } from '@nestjs/common';
-import { Account } from '@prisma/client';
+import { Controller, DefaultValuePipe, Get, Param, ParseBoolPipe, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { User } from '../accounts/decorators/user.decorator';
 import { YoutubeService } from './youtube.service';
 import { GaxiosErrorFilter } from '../utilities/filters/gaxios-error.filter';
@@ -16,32 +15,32 @@ export class YoutubeController {
   constructor(private youtubeService: YoutubeService) {}
 
   @Get('/channels')
-  getChannels(@User() user: Account, @Query('channelId') channelId?: string) {
+  getChannels(@User('id') userId: bigint, @Query('channelId') channelId?: string) {
     if (typeof channelId === 'string') {
-      return this.youtubeService.getChannelById(user.id, channelId).then((channel) => [channel]);
+      return this.youtubeService.getChannelById(userId, channelId).then((channel) => [channel]);
     }
-    return this.youtubeService.getChannels(user.id);
+    return this.youtubeService.getChannels(userId);
   }
 
   @Get('/playlists')
   getChannelPlaylists(
-    @User() user: Account,
+    @User('id') userId: bigint,
     @Query('channelId', RequiredPipe) channelId: string,
     @Query('playlistId') playlistId?: string,
   ) {
     if (typeof playlistId === 'string') {
-      return this.youtubeService.getPlaylistById(user.id, channelId, playlistId);
+      return this.youtubeService.getPlaylistById(userId, channelId, playlistId);
     }
-    return this.youtubeService.getPlaylists(user.id, channelId);
+    return this.youtubeService.getPlaylists(userId, channelId);
   }
 
   @Get('/playlists/:playlistId/items')
-  getChannelPlaylistItems(@User() user: Account, @Param('playlistId') playlistId: string) {
-    return this.youtubeService.getPlaylistItems(user.id, playlistId);
+  getChannelPlaylistItems(@User('id') userId: bigint, @Param('playlistId') playlistId: string) {
+    return this.youtubeService.getPlaylistItems(userId, playlistId);
   }
 
   @Get('/videos/:videoId')
-  getVideo(@User() user: Account, @Param('videoId') videoId: string) {
-    return this.youtubeService.getVideoById(user.id, videoId);
+  getVideo(@User('id') userId: bigint, @Param('videoId') videoId: string) {
+    return this.youtubeService.getVideoById(userId, videoId);
   }
 }
