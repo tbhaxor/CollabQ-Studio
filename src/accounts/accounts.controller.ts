@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Put, UseGuards } f
 import { Account } from '@prisma/client';
 import { User } from './decorators/user.decorator';
 import { AccountsService } from './accounts.service';
-import { UpdateAccountDto } from './accounts.dto';
+import { UpdateAccountDto } from './dtos/accounts.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('accounts')
