@@ -17,6 +17,9 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "lib": [
+      "ES6"
+    ],
     "typeRoots": [
       "node_modules/@types",
       "@types"
