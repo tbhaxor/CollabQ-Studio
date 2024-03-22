@@ -1,8 +1,8 @@
-import { BadRequestException, ConsoleLogger, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Account, AccountType, SocialAccount } from '@prisma/client';
-import Axios, { AxiosError } from 'axios';
-import { UpdateAccountDto } from './accounts.dto';
+import { Axios, AxiosError } from 'axios';
+import { UpdateAccountDto } from './dtos/accounts.dto';
 
 @Injectable()
 export class AccountsService {
@@ -11,7 +11,10 @@ export class AccountsService {
     logLevels: process.env.NODE_ENV === 'test' && ['fatal'],
   });
 
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    @Inject(Axios.name) private httpService: Axios,
+  ) {}
 
   getAccountById(accountId: string | bigint) {
     if (typeof accountId === 'string') {
@@ -57,10 +60,7 @@ export class AccountsService {
     }
 
     try {
-      await Axios.post('https://oauth2.googleapis.com/revoke', null, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        params: { token: token.accessToken },
-      });
+      this.httpService.post('revoke', null, { params: { token: token.accessToken } });
     } catch (error) {
       this.logger.error(error, error);
       if (error instanceof AxiosError) {
