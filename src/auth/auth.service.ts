@@ -1,11 +1,15 @@
 import { Profile } from 'passport-google-oauth20';
 import { AccountsService } from '../accounts/accounts.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AccountType } from '@prisma/client';
+import { Account, AccountType } from '@prisma/client';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private accountsService: AccountsService) {}
+  constructor(
+    private accountsService: AccountsService,
+    private jwtService: JwtService,
+  ) {}
 
   async upsertAccountWithTokens(audience: AccountType, accessToken: string, refreshToken: string, profile: Profile) {
     const account = await this.accountsService.getAccountBySocialProvideId(profile.id).then((account) => {
@@ -30,5 +34,12 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     return account;
+  }
+
+  async signJwt(account: Account) {
+    return this.jwtService.signAsync(
+      { displayName: account.name, email: account.email, type: account.type },
+      { audience: process.env.JWT_AUDIENCE || `app://collabq.studio/client.${account.type}`, subject: account.id.toString() },
+    );
   }
 }

@@ -7,10 +7,7 @@ import { AuthenticateOptionsGoogle } from 'passport-google-oauth20';
 export class GoogleAuthGuard extends AuthGuard('google') {
   getAuthenticateOptions(context: ExecutionContext): AuthenticateOptionsGoogle {
     const request = this.getRequest(context);
-    let audience = <AccountType>request.query.audience;
-    if (request.url.startsWith('/auth/callback')) {
-      audience = <AccountType>request.query.state;
-    }
+    const audience = (request.query.audience || request.query.state) as AccountType;
 
     switch (audience) {
       case 'owner':
@@ -18,10 +15,10 @@ export class GoogleAuthGuard extends AuthGuard('google') {
           accessType: 'offline',
           prompt: 'consent',
           scope: ['https://www.googleapis.com/auth/youtube', 'profile', 'email'],
-          state: 'manager',
+          state: audience,
         };
       case 'editor':
-        return { state: 'team', scope: ['profile', 'email'] };
+        return { state: audience, scope: ['profile', 'email'] };
       default:
         if (!request.query.audience) {
           throw new BadRequestException("'audience' query parameter is required.");
