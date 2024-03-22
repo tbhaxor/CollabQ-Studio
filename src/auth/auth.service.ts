@@ -1,7 +1,7 @@
 import { Profile } from 'passport-google-oauth20';
 import { AccountsService } from '../accounts/accounts.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Account, AccountType } from '@prisma/client';
+import { AccountType } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -36,10 +36,14 @@ export class AuthService {
     return account;
   }
 
-  async signJwt(account: Account) {
-    return this.jwtService.signAsync(
-      { displayName: account.name, email: account.email, type: account.type },
-      { audience: process.env.JWT_AUDIENCE || `app://collabq.studio/client.${account.type}`, subject: account.id.toString() },
-    );
+  private getAudience(accountType: AccountType) {
+    if (process.env.JWT_AUDIENCE) {
+      return process.env.JWT_AUDIENCE!;
+    }
+    return `app://collabq.studio/client.${accountType}`;
+  }
+
+  async signJwt(userId: bigint, accounType: AccountType) {
+    return this.jwtService.sign({}, { audience: this.getAudience(accounType), subject: userId.toJSON() });
   }
 }
