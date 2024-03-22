@@ -33,16 +33,19 @@ export class ValidateLengthPipe implements PipeTransform {
   }
 
   transform(value: any, metadata: ArgumentMetadata) {
-    if (typeof value == 'undefined' || value === null || typeof value.length === 'undefined') {
-      return value;
+    if (typeof value?.length === 'undefined') {
+      throw new BadRequestException(`${metadata.data || metadata.type} doesn't have length property.`);
     }
 
-    if (typeof this.options.min === 'number' && this.options.min >= value.length) {
-      throw new BadRequestException(`Length ${metadata.data} should greater than ${this.options.min}.`);
+    if (this.isExact && value.length != this.options.min) {
+      throw new BadRequestException(`Length of ${metadata.data || metadata.type} should be exactly ${this.options.min}.`);
     }
 
-    if (typeof this.options.max === 'number' && this.options.max <= value.length) {
-      throw new BadRequestException(`Length of ${metadata.data} should less than ${this.options.max}.`);
+    if (this.options.min > value.length) {
+      throw new BadRequestException(`Length of ${metadata.data || metadata.type} should greater than ${this.options.min}.`);
+    }
+    if (this.options.max < value.length) {
+      throw new BadRequestException(`Length of ${metadata.data || metadata.type} should less than ${this.options.max}.`);
     }
 
     return value;
