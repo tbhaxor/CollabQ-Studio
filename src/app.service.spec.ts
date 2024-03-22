@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppService } from './app.service';
+import { faker } from '@faker-js/faker';
 
 describe('AppService', () => {
   let service: AppService;
+  let name: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -10,11 +12,20 @@ describe('AppService', () => {
     }).compile();
 
     service = module.get<AppService>(AppService);
+    name = faker.person.firstName();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('greet', () => {});
+  describe('greet', () => {
+    it("should return 'Hello World!' on no value", () => {
+      expect(service.greet()).toBe('Hello World!');
+    });
+
+    it("should return 'Hello ${name}!' when name is passed", () => {
+      expect(service.greet(name)).toBe(`Hello ${name}!`);
+    });
+  });
 });
